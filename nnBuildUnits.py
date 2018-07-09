@@ -1502,7 +1502,7 @@ By Dong Nie
 '''    
 class gdl_loss(nn.Module):   
     def __init__(self, pNorm=2):
-        super(gdl_loss1, self).__init__()
+        super(gdl_loss, self).__init__()
         self.convX = nn.Conv2d(1, 1, kernel_size=(1, 2), stride=1, padding=(0, 1), bias=False)
         self.convY = nn.Conv2d(1, 1, kernel_size=(2, 1), stride=1, padding=(1, 0), bias=False)
         
