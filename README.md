@@ -1,5 +1,5 @@
 # medSynthesisV1
-This is a copy of package for medical image synthesis work with LRes-ResUnet and GAN (wgan-gp) in pytorch framework
+This is a copy of package for medical image synthesis work with LRes-ResUnet and GAN (wgan-gp) in pytorch framework, which is an simple extension of our paper <a href='https://ieeexplore.ieee.org/abstract/document/8310638/'>Medical Image Synthesis with Deep Convolutional Adversarial Networks</a>.
 
 # How to run the pytorch code
 The main entrance for the code is runCTRecon.py or runCTRecon3d.py
