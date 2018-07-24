@@ -1,23 +1,8 @@
 # medSynthesisV1
 This is a copy of package for medical image synthesis work with LRes-ResUnet and GAN (wgan-gp) in pytorch framework
 
-@inproceedings{nie2017medical,
-  title={Medical image synthesis with context-aware generative adversarial networks},
-  author={Nie, Dong and Trullo, Roger and Lian, Jun and Petitjean, Caroline and Ruan, Su and Wang, Qian and Shen, Dinggang},
-  booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
-  pages={417--425},
-  year={2017},
-  organization={Springer}
-}
-@article{nie2018medical,
-  title={Medical Image Synthesis with Deep Convolutional Adversarial Networks},
-  author={Nie, Dong and Trullo, Roger and Lian, Jun and Wang, Li and Petitjean, Caroline and Ruan, Su and Wang, Qian and Shen, Dinggang},
-  journal={IEEE Transactions on Biomedical Engineering},
-  year={2018},
-  publisher={IEEE}
-}
-# How to run the tensorflow code
-The main entrance for the code is main.py
+# How to run the pytorch code
+The main entrance for the code is runCTRecon.py or runCTRecon3d.py
 
 I suppose you have installed:    <br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pytorch (>=0.3.0)
@@ -31,3 +16,22 @@ Steps to run the code:
 4. choose the loss function (1. LossL1, 2. lossRTL1, 3. MSE (default))
 5. set up the hyper-parameters in the runCTRecon.py
 6. run the code: python runCTRecon.py
+
+If it is helpful to your work, please cite the papers:
+
+@inproceedings{nie2017medical,
+  title={Medical image synthesis with context-aware generative adversarial networks},
+  author={Nie, Dong and Trullo, Roger and Lian, Jun and Petitjean, Caroline and Ruan, Su and Wang, Qian and Shen, Dinggang},
+  booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
+  pages={417--425},
+  year={2017},
+  organization={Springer}
+}
+
+@article{nie2018medical,
+  title={Medical Image Synthesis with Deep Convolutional Adversarial Networks},
+  author={Nie, Dong and Trullo, Roger and Lian, Jun and Wang, Li and Petitjean, Caroline and Ruan, Su and Wang, Qian and Shen, Dinggang},
+  journal={IEEE Transactions on Biomedical Engineering},
+  year={2018},
+  publisher={IEEE}
+}
