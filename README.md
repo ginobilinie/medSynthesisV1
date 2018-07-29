@@ -10,7 +10,7 @@ I suppose you have installed:    <br>
      <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numpy
 
 Steps to run the code:
-1. use readMedImg4CaffeCropNie4SingleS.py to extract patches (as limited annotated data can be acquired in medical image fields, we usually use patch as the training unit), and save as hdf5 format.
+1. use extract23DPatch4MultiModalImg.py.py to extract patches (as limited annotated data can be acquired in medical image fields, we usually use patch as the training unit), and save as hdf5 format.
 2. choose the generator (1. UNet, 2. ResUNet, 3. UNet_LRes and 4. ResUNet_LRes (default, 4)
 3. choose the discriminator if you want to use the GAN-framework (we provide wgan-gp and the basic GAN)
 4. choose the loss function (1. LossL1, 2. lossRTL1, 3. MSE (default))
