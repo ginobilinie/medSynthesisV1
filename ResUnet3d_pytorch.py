@@ -337,7 +337,7 @@ class ResUNet_LRes(nn.Module):
         self.up_block512_256 = UNetUpResBlock(256, 128)
         self.up_block256_128 = UNetUpResBlock(128, 64)
         self.up_block128_64 = UNetUpResBlock(64, 32)
-        self.Dropout = nn.Dropout2d(p=dp_prob)
+        self.Dropout = nn.Dropout3d(p=dp_prob)
         self.last = nn.Conv3d(32, n_classes, 1, stride=1)
 
     def forward(self, x, res_x):
@@ -392,12 +392,12 @@ class Discriminator(nn.Module):
         super(Discriminator,self).__init__()
         #you can make abbreviations for conv and fc, this is not necessary
         #class torch.nn.Conv2d(in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, groups=1, bias=True)
-        self.conv1 = nn.Conv2d(1,32,(9,9))
-        self.bn1 = nn.BatchNorm2d(32)
-        self.conv2 = nn.Conv2d(32,64,(5,5))
-        self.bn2 = nn.BatchNorm2d(64)
-        self.conv3 = nn.Conv2d(64,64,(5,5))
-        self.bn3 = nn.BatchNorm2d(64)
+        self.conv1 = nn.Conv3d(1,32,9)
+        self.bn1 = nn.BatchNorm3d(32)
+        self.conv2 = nn.Conv3d(32,64,5)
+        self.bn2 = nn.BatchNorm3d(64)
+        self.conv3 = nn.Conv3d(64,64,5)
+        self.bn3 = nn.BatchNorm3d(64)
         self.fc1 = nn.Linear(64*4*4,512)
         #self.bn3= nn.BatchNorm1d(6)
         self.fc2 = nn.Linear(512,64)
@@ -406,11 +406,11 @@ class Discriminator(nn.Module):
 
     def forward(self,x):
 #         print 'line 114: x shape: ',x.size()
-        x = F.max_pool2d(F.relu(self.bn1(self.conv1(x))),(2,2))#conv->relu->pool
+        x = F.max_pool3d(F.relu(self.bn1(self.conv1(x))),(2,2,2))#conv->relu->pool
 
-        x = F.max_pool2d(F.relu(self.bn2(self.conv2(x))),(2,2))#conv->relu->pool
+        x = F.max_pool3d(F.relu(self.bn2(self.conv2(x))),(2,2,2))#conv->relu->pool
 
-        x = F.max_pool2d(F.relu(self.bn3(self.conv3(x))),(2,2))#conv->relu->pool
+        x = F.max_pool3d(F.relu(self.bn3(self.conv3(x))),(2,2,2))#conv->relu->pool
 
         #reshape them into Vector, review ruturned tensor shares the same data but have different shape, same as reshape in matlab
         x = x.view(-1,self.num_of_flat_features(x))
