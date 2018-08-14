@@ -1157,10 +1157,10 @@ class GeneralizedDiceLoss4Organs(nn.Module):
             target = targets_one_hot[:,organID,...].contiguous().view(-1,1).squeeze(1) #for 2D or 3D
             result = results_one_hot[:,organID,...].contiguous().view(-1,1).squeeze(1) #for 2D or 3D
     #             print 'unique(target): ',unique(target),' unique(result): ',unique(result)
-#             if torch.sum(target)==0:
-#                 organWeight =0
-#             else:
-            organWeight = 1/((torch.sum(target))**2+eps)
+            if torch.sum(target)==0:
+                organWeight = 0 # this is necessary, otherwise, union can be too big due to too big organ weight if some organ doesnot appear
+            else:
+               organWeight = 1/((torch.sum(target))**2+eps) 
 #             print 'sum: %d'%torch.sum(target),' organWeight: %f'%organWeight
     #         intersect = torch.dot(result, target)
             intersect_vec = result * target
