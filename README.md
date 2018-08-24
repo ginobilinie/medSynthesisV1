@@ -11,14 +11,15 @@ I suppose you have installed:    <br>
      <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numpy
 
 Steps to run the code:
-1. use extract23DPatch4MultiModalImg.py.py to extract patches (as limited annotated data can be acquired in medical image fields, we usually use patch as the training unit), and save as hdf5 format
+1. use extract23DPatch4MultiModalImg.py (or extract23DPatch4SingleModalImg.py for single input modality) to extract patches (as limited annotated data can be acquired in medical image fields, we usually use patch as the training unit), and save as hdf5 format
 2. choose the generator (1. UNet, 2. ResUNet, 3. UNet_LRes and 4. ResUNet_LRes (default, 4)<br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Note: for low-dose xx to standard-dose xx (such as low-dose pet to standard pet, low CT to High CT...) or low resolution xx to high resolution xx(e.g., 3T->7T), we suggest use ResUNet_LRes(4) which contains a long-skip connection. 
  <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If the input modality and the output modality is quite different, we suggest use UNet_LRes(3))
 3. choose the discriminator if you want to use the GAN-framework (we provide wgan-gp and the basic GAN)
 4. choose the loss function (1. LossL1, 2. lossRTL1, 3. MSE (default))
 5. set up the hyper-parameters in the runCTRecon.py (or 3d with runCTRecon3d.py)
-6. run the code: python runCTRecon.py (or 3d with runCTRecon3d.py)
+6. run the code: python runCTRecon.py (or 3d with runCTRecon3d.py) for training stage
+7. run the code: python runTesting_Recon.py for testing stage
 
 If it is helpful to your work, please cite the papers:
 
