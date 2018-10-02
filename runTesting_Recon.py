@@ -20,7 +20,7 @@ import SimpleITK as sitk
 parser = argparse.ArgumentParser(description="PyTorch InfantSeg")
 
 parser.add_argument("--isSegReg", action="store_true", help="is Seg and Reg?", default=False)
-parser.add_argument("--isMultiSource", action="store_true", help="is multiple modality used?", default=False)
+parser.add_argument("--isMultiSource", action="store_true", help="is multiple input modality used?", default=False)
 parser.add_argument("--whichLoss", type=int, default=1, help="which loss to use: 1. LossL1, 2. lossRTL1, 3. MSE (default)")
 parser.add_argument("--whichNet", type=int, default=4, help="which loss to use: 1. UNet, 2. ResUNet, 3. UNet_LRes and 4. ResUNet_LRes (default, 3)")
 parser.add_argument("--lossBase", type=int, default=1, help="The base to multiply the lossG_G, Default (1)")
@@ -72,9 +72,9 @@ def main():
     for ind in ids:
         start = time.time()
 
-        mr_test_itk = sitk.ReadImage(os.path.join(path_test,'%s_60s_suv.nii.gz'%ind))
-        ct_test_itk = sitk.ReadImage(os.path.join(path_test,'%s_rsCT.nii.gz'%ind))
-        hpet_test_itk = sitk.ReadImage(os.path.join(path_test, '%s_120s_suv.nii.gz'%ind))
+        mr_test_itk = sitk.ReadImage(os.path.join(path_test,'%s_60s_suv.nii.gz'%ind))#input modality
+        ct_test_itk = sitk.ReadImage(os.path.join(path_test,'%s_rsCT.nii.gz'%ind))#auxialliary modality
+        hpet_test_itk = sitk.ReadImage(os.path.join(path_test, '%s_120s_suv.nii.gz'%ind))#output modality
 
 
         spacing = hpet_test_itk.GetSpacing()
