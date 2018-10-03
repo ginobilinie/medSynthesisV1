@@ -122,13 +122,13 @@ def main():
     
     path_test ='/home/niedong/DataCT/data_niigz/'
     path_patients_h5 = '/home/niedong/DataCT/h5Data_snorm/trainBatch2D_H5'
-    path_patients_h5_test ='/home/niedong/DataCT/h5Data_snorm/valBatch2D_H5'
+    path_patients_h5_val ='/home/niedong/DataCT/h5Data_snorm/valBatch2D_H5'
 #     batch_size=10
     #data_generator = Generator_2D_slices(path_patients_h5,opt.batchSize,inputKey='data3T',outputKey='data7T')
     #data_generator_test = Generator_2D_slices(path_patients_h5_test,opt.batchSize,inputKey='data3T',outputKey='data7T')
 
     data_generator = Generator_2D_slicesV1(path_patients_h5,opt.batchSize, inputKey='dataLPET', segKey='dataCT', contourKey='dataHPET')
-    data_generator_test = Generator_2D_slicesV1(path_patients_h5_test,opt.batchSize, inputKey='dataLPET', segKey='dataCT', contourKey='dataHPET')
+    data_generator_test = Generator_2D_slicesV1(path_patients_h5_val, opt.batchSize, inputKey='dataLPET', segKey='dataCT', contourKey='dataHPET')
     if opt.resume:
         if os.path.isfile(opt.resume):
             print("=> loading checkpoint '{}'".format(opt.resume))
