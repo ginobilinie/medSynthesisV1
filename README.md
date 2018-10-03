@@ -41,3 +41,8 @@ If it is helpful to your work, please cite the papers:
   year={2018},
   publisher={IEEE}
 }
+
+
+# Upload your brain MRI, Predict corresponding CT
+
+If you're interested in it, you can send me a copy of your brain MRI, and I'll inference the CT and send a copy of predicted CT to you. My email is dongnie.at.cs.unc.edu.
