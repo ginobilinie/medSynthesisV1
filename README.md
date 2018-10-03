@@ -18,7 +18,7 @@ Steps to run the code:
 3. choose the discriminator if you want to use the GAN-framework (we provide wgan-gp and the basic GAN)
 4. choose the loss function (1. LossL1, 2. lossRTL1, 3. MSE (default))
 5. set up the hyper-parameters in the runCTRecon.py (or 3d with runCTRecon3d.py)<br>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; You have to place the path to the h5 files and also the path to the testing images to the configs.
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; You have to place the path to the h5 files and also the path to the testing images to the configs.<br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Also, you have to setup all other config choices, such as network choice, disciminator choise, loss functions, initial learing rate and so on
 6. run the code: python runCTRecon.py (or 3d with runCTRecon3d.py) for training stage
 7. run the code: python runTesting_Recon.py for testing stage
