@@ -305,9 +305,9 @@ def main():
             maxPercentCT, minPercentCT = np.percentile(ctnp, [99.5, 0])
             print 'maxPercentMR: ', maxPercentPET, ' minPercentMR: ', minPercentPET, ' maxPercentCT: ', maxPercentCT, 'minPercentCT: ', minPercentCT
 
-            matLPET = (mrnp - minPercentPET) / (maxPercentPET - minPercentPET)
+            matLPET = (mrnp - minPercentPET) / (maxPercentPET - minPercentPET) #input
 
-            matCT = (ctnp - minPercentCT) / (maxPercentCT - minPercentCT)
+            matCT = (ctnp - minPercentPET) / (maxPercentCT - minPercentPET) #output
 
             print 'maxMR: ', np.amax(matLPET),  ' maxCT: ', np.amax(matCT)
             print 'minLPET: ', np.amin(matLPET),  ' minCT: ', np.amin(matCT)
