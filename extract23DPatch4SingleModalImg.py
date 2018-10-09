@@ -306,8 +306,8 @@ def main():
             print 'maxPercentMR: ', maxPercentPET, ' minPercentMR: ', minPercentPET, ' maxPercentCT: ', maxPercentCT, 'minPercentCT: ', minPercentCT
 
             matLPET = (mrnp - minPercentPET) / (maxPercentPET - minPercentPET) #input
-
-            matCT = (ctnp - minPercentPET) / (maxPercentCT - minPercentPET) #output
+            #output, use input's statistical (if there is big difference between input and output, you can find a simple relation between input and output and then include this relation to normalize output with input's statistical)
+            matCT = (ctnp - minPercentPET) / (maxPercentPET - minPercentPET) 
 
             print 'maxMR: ', np.amax(matLPET),  ' maxCT: ', np.amax(matCT)
             print 'minLPET: ', np.amin(matLPET),  ' minCT: ', np.amin(matCT)
