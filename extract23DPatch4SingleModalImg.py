@@ -205,112 +205,98 @@ def main():
     scan = ScanFile(path, postfix='_mr.hdr')
     filenames = scan.scan_files()
 
-    maxLPET = 149.366742
-    maxPercentLPET = 7.76
-    minLPET = 0.00055037
-    meanLPET = 0.27593288
-    stdLPET = 0.75747500
+    # for input
+    maxSource = 149.366742
+    maxPercentSource = 7.76
+    minSource = 0.00055037
+    meanSource = 0.27593288
+    stdSource = 0.75747500
 
-    # for s-pet
-    maxSPET = 156.675962
-    maxPercentSPET = 7.79
-    minSPET = 0.00055037
-    meanSPET = 0.284224789
-    stdSPET = 0.7642257
-
-    # for rsCT
-    maxCT = 27279
-    maxPercentCT = 1320
-    minCT = -1023
-    meanCT = -601.1929
-    stdCT = 475.034
+    # for output
+    maxTarget = 27279
+    maxPercentTarget = 1320
+    minTarget = -1023
+    meanTarget = -601.1929
+    stdTarget = 475.034
 
     for filename in filenames:
 
-        print 'low dose filename: ', filename
+        print 'source filename: ', filename
 
-        lpet_fn = filename
-        ct_fn = filename.replace('_mr.hdr', '_ct.hdr')
+        source_fn = filename
+        target_fn = filename.replace('_mr.hdr', '_ct.hdr')
 
-        imgOrg = sitk.ReadImage(lpet_fn)
-        mrnp = sitk.GetArrayFromImage(imgOrg)
+        imgOrg = sitk.ReadImage(source_fn)
+        sourcenp = sitk.GetArrayFromImage(imgOrg)
 
-        imgOrg1 = sitk.ReadImage(ct_fn)
-        ctnp = sitk.GetArrayFromImage(imgOrg1)
+        imgOrg1 = sitk.ReadImage(target_fn)
+        targetnp = sitk.GetArrayFromImage(imgOrg1)
 
-        maskimg = mrnp
+        maskimg = sourcenp
 
-        mu = np.mean(mrnp)
+        mu = np.mean(sourcenp)
 
         if opt.how2normalize == 1:
-            maxV, minV = np.percentile(mrnp, [99, 1])
+            maxV, minV = np.percentile(sourcenp, [99, 1])
             print 'maxV,', maxV, ' minV, ', minV
-            mrnp = (mrnp - mu) / (maxV - minV)
-            print 'unique value: ', np.unique(ctnp)
+            sourcenp = (sourcenp - mu) / (maxV - minV)
+            print 'unique value: ', np.unique(targetnp)
 
         # for training data in pelvicSeg
         if opt.how2normalize == 2:
-            maxV, minV = np.percentile(mrnp, [99, 1])
+            maxV, minV = np.percentile(sourcenp, [99, 1])
             print 'maxV,', maxV, ' minV, ', minV
-            mrnp = (mrnp - mu) / (maxV - minV)
-            print 'unique value: ', np.unique(ctnp)
+            sourcenp = (sourcenp - mu) / (maxV - minV)
+            print 'unique value: ', np.unique(targetnp)
 
         # for training data in pelvicSegRegH5
         if opt.how2normalize == 3:
-            std = np.std(mrnp)
-            mrnp = (mrnp - mu) / std
-            print 'maxV,', np.ndarray.max(mrnp), ' minV, ', np.ndarray.min(mrnp)
+            std = np.std(sourcenp)
+            sourcenp = (sourcenp - mu) / std
+            print 'maxV,', np.ndarray.max(sourcenp), ' minV, ', np.ndarray.min(sourcenp)
 
         if opt.how2normalize == 4:
-            maxLPET = 149.366742
-            maxPercentLPET = 7.76
-            minLPET = 0.00055037
-            meanLPET = 0.27593288
-            stdLPET = 0.75747500
+            maxSource = 149.366742
+            maxPercentSource = 7.76
+            minSource = 0.00055037
+            meanSource = 0.27593288
+            stdSource = 0.75747500
 
-            # for rsCT
-            maxCT = 27279
-            maxPercentCT = 1320
-            minCT = -1023
-            meanCT = -601.1929
-            stdCT = 475.034
-
-            # for s-pet
-            maxSPET = 156.675962
-            maxPercentSPET = 7.79
-            minSPET = 0.00055037
-            meanSPET = 0.284224789
-            stdSPET = 0.7642257
-
-            # matLPET = (mrnp - meanLPET) / (stdLPET)
-            matLPET = (mrnp - minLPET) / (maxPercentLPET - minLPET)
-            matCT = (ctnp - meanCT) / stdCT
+            # for target
+            maxTarget = 27279
+            maxPercentTarget = 1320
+            minTarget = -1023
+            meanTarget = -601.1929
+            stdTarget = 475.034
+            
+            matSource = (sourcenp - minSource) / (maxPercentSource - minSource)
+            matTarget = (targetnp - meanTarget) / stdTarget
 
         if opt.how2normalize == 5:
-            # for rsCT
-            maxCT = 27279
-            maxPercentCT = 1320
-            minCT = -1023
-            meanCT = -601.1929
-            stdCT = 475.034
+            # for target
+            maxTarget = 27279
+            maxPercentTarget = 1320
+            minTarget = -1023
+            meanTarget = -601.1929
+            stdTarget = 475.034
 
-            print 'ct, max: ', np.amax(ctnp), ' ct, min: ', np.amin(ctnp)
+            print 'target, max: ', np.amax(targetnp), ' target, min: ', np.amin(targetnp)
 
-            # matLPET = (mrnp - meanLPET) / (stdLPET)
-            matLPET = mrnp
-            matCT = (ctnp - meanCT) / stdCT
+            # matSource = (sourcenp - meanSource) / (stdSource)
+            matSource = sourcenp
+            matTarget = (targetnp - meanTarget) / stdTarget
 
         if opt.how2normalize == 6:
-            maxPercentPET, minPercentPET = np.percentile(mrnp, [99.5, 0])
-            maxPercentCT, minPercentCT = np.percentile(ctnp, [99.5, 0])
-            print 'maxPercentMR: ', maxPercentPET, ' minPercentMR: ', minPercentPET, ' maxPercentCT: ', maxPercentCT, 'minPercentCT: ', minPercentCT
+            maxPercentSource, minPercentSource = np.percentile(sourcenp, [99.5, 0])
+            maxPercentTarget, minPercentTarget = np.percentile(targetnp, [99.5, 0])
+            print 'maxPercentSource: ', maxPercentSource, ' minPercentSource: ', minPercentSource, ' maxPercentTarget: ', maxPercentTarget, 'minPercentTarget: ', minPercentTarget
 
-            matLPET = (mrnp - minPercentPET) / (maxPercentPET - minPercentPET) #input
+            matSource = (sourcenp - minPercentSource) / (maxPercentSource - minPercentSource) #input
             #output, use input's statistical (if there is big difference between input and output, you can find a simple relation between input and output and then include this relation to normalize output with input's statistical)
-            matCT = (ctnp - minPercentPET) / (maxPercentPET - minPercentPET) 
+            matTarget = (targetnp - minPercentSource) / (maxPercentSource - minPercentSource) 
 
-            print 'maxMR: ', np.amax(matLPET),  ' maxCT: ', np.amax(matCT)
-            print 'minLPET: ', np.amin(matLPET),  ' minCT: ', np.amin(matCT)
+            print 'maxSource: ', np.amax(matSoure),  ' maxTarget: ', np.amax(matTarget)
+            print 'minSource: ', np.amin(matSource),  ' minTarget: ', np.amin(matTarget)
 
         # maxV, minV = np.percentile(mrimg, [99.5, 0])
         #         print 'maxV is: ',np.ndarray.max(mrimg)
@@ -363,17 +349,17 @@ def main():
 
         fileID = words[0]
         rate = 1
-        cubicCnt = extractPatch4OneSubject(matLPET, matCT, maskimg, fileID, dSeg, step, rate)
+        cubicCnt = extractPatch4OneSubject(matSource, matTarget, maskimg, fileID, dSeg, step, rate)
         # cubicCnt = extractPatch4OneSubject(mrnp, matCT, hpetnp, maskimg, fileID,dSeg,step,rate)
         print '# of patches is ', cubicCnt
 
         # reverse along the 1st dimension
-        rmrimg = matLPET[matLPET.shape[0] - 1::-1, :, :]
-        rmatCT = matCT[matCT.shape[0] - 1::-1, :, :]
+        rmatSource = matSource[matSource.shape[0] - 1::-1, :, :]
+        rmatTarget = matTarget[matTarget.shape[0] - 1::-1, :, :]
 
         rmaskimg = maskimg[maskimg.shape[0] - 1::-1, :, :]
         fileID = words[0] + 'r'
-        cubicCnt = extractPatch4OneSubject(rmrimg, rmatCT, rmaskimg, fileID, dSeg, step, rate)
+        cubicCnt = extractPatch4OneSubject(rmatSource, rmatTarget, rmaskimg, fileID, dSeg, step, rate)
         print '# of patches is ', cubicCnt
 
 
