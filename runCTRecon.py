@@ -38,6 +38,7 @@ parser.add_argument("--saveModelEvery", type=int, default=5000, help="number of 
 parser.add_argument("--showValPerformanceEvery", type=int, default=1000, help="number of iterations to show validation performance")
 parser.add_argument("--showTestPerformanceEvery", type=int, default=5000, help="number of iterations to show test performance")
 parser.add_argument("--lr", type=float, default=5e-3, help="Learning Rate. Default=1e-4")
+parser.add_argument("--lr_netD", type=float, default=5e-3, help="Learning Rate for discriminator. Default=5e-3")
 parser.add_argument("--dropout_rate", default=0.2, type=float, help="prob to drop neurons to zero: 0.2")
 parser.add_argument("--decLREvery", type=int, default=10000, help="Sets the learning rate to the initial LR decayed by momentum every n iterations, Default: n=40000")
 parser.add_argument("--cuda", action="store_true", help="Use cuda?", default=True)
@@ -72,7 +73,7 @@ def main():
     netD.apply(weights_init)
     netD.cuda()
     
-    optimizerD = optim.Adam(netD.parameters(),lr=1e-3)
+    optimizerD = optim.Adam(netD.parameters(),lr=opt.lr_netD)
     criterion_bce=nn.BCELoss()
     criterion_bce.cuda()
     
