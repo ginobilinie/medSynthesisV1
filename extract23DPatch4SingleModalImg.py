@@ -295,7 +295,7 @@ def main():
             #output, use input's statistical (if there is big difference between input and output, you can find a simple relation between input and output and then include this relation to normalize output with input's statistical)
             matTarget = (targetnp - minPercentSource) / (maxPercentSource - minPercentSource) 
 
-            print 'maxSource: ', np.amax(matSoure),  ' maxTarget: ', np.amax(matTarget)
+            print 'maxSource: ', np.amax(matSource),  ' maxTarget: ', np.amax(matTarget)
             print 'minSource: ', np.amin(matSource),  ' minTarget: ', np.amin(matTarget)
 
         # maxV, minV = np.percentile(mrimg, [99.5, 0])
