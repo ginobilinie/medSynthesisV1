@@ -406,11 +406,12 @@ class Discriminator(nn.Module):
 
     def forward(self,x):
 #         print 'line 114: x shape: ',x.size()
-        x = F.max_pool3d(F.relu(self.bn1(self.conv1(x))),(2,2,2))#conv->relu->pool
+        #x = F.max_pool3d(F.relu(self.bn1(self.conv1(x))),(2,2,2))#conv->relu->pool
+        x = F.max_pool3d(F.relu(self.conv1(x)),(2,2,2))#conv->relu->pool
 
-        x = F.max_pool3d(F.relu(self.bn2(self.conv2(x))),(2,2,2))#conv->relu->pool
+        x = F.max_pool3d(F.relu(self.conv2(x)),(2,2,2))#conv->relu->pool
 
-        x = F.max_pool3d(F.relu(self.bn3(self.conv3(x))),(2,2,2))#conv->relu->pool
+        x = F.max_pool3d(F.relu(self.conv3(x)),(2,2,2))#conv->relu->pool
 
         #reshape them into Vector, review ruturned tensor shares the same data but have different shape, same as reshape in matlab
         x = x.view(-1,self.num_of_flat_features(x))
@@ -420,7 +421,7 @@ class Discriminator(nn.Module):
 
         x = F.relu(self.fc3(x))
 
-        x = F.sigmoid(x)
+        #x = F.sigmoid(x)
         #print 'min,max,mean of x in 0st layer',x.min(),x.max(),x.mean()
         return x
 
