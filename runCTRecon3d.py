@@ -193,11 +193,13 @@ def main():
                 labels = labels.unsqueeze(1)
 
             outputD_real = netD(labels)
+            outputD_real = F.sigmoid(outputD_real)
 
             if len(outputG.size())==3:
                 outputG = outputG.unsqueeze(1)
 
             outputD_fake = netD(outputG)
+            outputD_fake = F.sigmoid(outputD_fake)
             netD.zero_grad()
             batch_size = inputs.size(0)
             real_label = torch.ones(batch_size,1)
@@ -256,6 +258,7 @@ def main():
                 outputG = outputG.unsqueeze(1)
 
             outputD = netD(outputG)
+            outputD = F.sigmoid(outputD)
             lossG_D = opt.lambda_AD*criterion_bce(outputD,real_label) #note, for generator, the label for outputG is real, because the G wants to confuse D
             lossG_D.backward()
 
