@@ -183,7 +183,11 @@ def main():
 
         ## (1) update D network: maximize log(D(x)) + log(1 - D(G(z)))
         if opt.isAdLoss:
-            outputG = net(source,residual_source) #5x64x64->1*64x64
+            if opt.whichNet == 3 or opt.whichNet == 4:
+                outputG = net(source, residual_source)  # 5x64x64->1*64x64
+            else:
+                outputG = net(source)  # 5x64x64->1*64x64
+            #outputG = net(source,residual_source) #5x64x64->1*64x64
 
             if len(labels.size())==3:
                 labels = labels.unsqueeze(1)
@@ -223,7 +227,11 @@ def main():
 
 #         print inputs.data.shape
         #outputG = net(source) #here I am not sure whether we should use twice or not
-        outputG = net(source,residual_source) #5x64x64->1*64x64
+        if opt.whichNet == 3 or opt.whichNet == 4:
+            outputG = net(source, residual_source)  # 5x64x64->1*64x64
+        else:
+            outputG = net(source)  # 5x64x64->1*64x64
+        #outputG = net(source,residual_source) #5x64x64->1*64x64
         net.zero_grad()
         if opt.whichLoss==1:
             lossG_G = criterion_L1(torch.squeeze(outputG), torch.squeeze(labels))
@@ -238,8 +246,12 @@ def main():
             #we want to fool the discriminator, thus we pretend the label here to be real. Actually, we can explain from the
             #angel of equation (note the max and min difference for generator and discriminator)
             #outputG = net(inputs)
-            outputG = net(source,residual_source) #5x64x64->1*64x64
-
+            #outputG = net(source,residual_source) #5x64x64->1*64x64
+            if opt.whichNet == 3 or opt.whichNet == 4:
+                outputG = net(source, residual_source)  # 5x64x64->1*64x64
+            else:
+                outputG = net(source)  # 5x64x64->1*64x64
+                
             if len(outputG.size())==3:
                 outputG = outputG.unsqueeze(1)
 
@@ -318,7 +330,11 @@ def main():
 
             # source = inputs
             #outputG = net(inputs)
-            outputG = net(source,residual_source) #5x64x64->1*64x64
+            if opt.whichNet == 3 or opt.whichNet == 4:
+                outputG = net(source, residual_source)  # 5x64x64->1*64x64
+            else:
+                outputG = net(source)  # 5x64x64->1*64x64
+            #outputG = net(source,residual_source) #5x64x64->1*64x64
 
             if opt.whichLoss == 1:
                 lossG_G = criterion_L1(torch.squeeze(outputG), torch.squeeze(labels))
