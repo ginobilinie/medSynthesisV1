@@ -419,7 +419,7 @@ class Discriminator(nn.Module):
 
         x = F.relu(self.fc2(x))
 
-        x = F.relu(self.fc3(x))
+        x = self.fc3(x)
 
         #x = F.sigmoid(x)
         #print 'min,max,mean of x in 0st layer',x.min(),x.max(),x.mean()
