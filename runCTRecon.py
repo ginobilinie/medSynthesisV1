@@ -377,6 +377,9 @@ def main():
         if iter%opt.decLREvery==0:
             opt.lr = opt.lr*0.5
             adjust_learning_rate(optimizer, opt.lr)
+            opt.lr_netD = opt.lr_netD*0.25
+            adjust_learning_rate(optimizerD, opt.lr_netD)
+
                 
         if iter%opt.showValPerformanceEvery==0: #test one subject
             # to test on the validation dataset in the format of h5 
