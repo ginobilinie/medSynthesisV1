@@ -3,7 +3,7 @@ This is a copy of package for medical image synthesis work with LRes-ResUnet and
 https://github.com/ginobilinie/medSynthesis
 
 # How to run the pytorch code
-The main entrance for the code is runCTRecon.py or runCTRecon3d.py (currently, the 2d/2.5d version is fine to run, and the discriminator for 3d version currently only support BCE loss since I strongly suggest you use W-distance (WGAN-GP)).
+The main entrance for the code is runCTRecon.py or runCTRecon3d.py (currently, the 2d/2.5d version is fine to run, and the discriminator for 3d version currently only support BCE loss since I suggest you use W-distance (WGAN-GP) since it is easier to tune the hyper-parameters for this one).
 
 I suppose you have installed:    <br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pytorch (>=0.3.0)
