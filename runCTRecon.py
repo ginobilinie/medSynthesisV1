@@ -304,7 +304,7 @@ def main():
         lossG_G.backward(retain_graph=True) #compute gradients
 
         if opt.isGDL:
-            lossG_gdl = opt.lambda_gdl * criterion_gdl(outputG,torch.unsqueeze(np.squeeze(labels),1))
+            lossG_gdl = opt.lambda_gdl * criterion_gdl(outputG,torch.unsqueeze(torch.squeeze(labels,1),1))
             lossG_gdl.backward() #compute gradients
 
         if opt.isAdLoss:
@@ -448,7 +448,7 @@ def main():
             print 'lossG_G is %.5f.'%(lossG_G.data[0])
 
             if opt.isGDL:
-                lossG_gdl = criterion_gdl(outputG, labels)
+                lossG_gdl = criterion_gdl(outputG, torch.unsqueeze(torch.squeeze(labels,1),1))
                 print 'loss for GDL loss is %f'%lossG_gdl.data[0]
 
         if iter % opt.showTestPerformanceEvery == 0:  # test one subject
