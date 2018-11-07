@@ -362,16 +362,18 @@ def main():
             print 'lossG_G is %.5f respectively.'%(lossG_G.data[0])
 
             if opt.isGDL:
-                print('loss for GDL loss is %f'%lossG_gdl.data[0])
+                print 'loss for GDL loss is %f'%lossG_gdl.data[0] 
 
             if opt.isAdLoss:
                 print 'loss_real is ',loss_real.data[0],'loss_fake is ',loss_fake.data[0],'outputD_real is',outputD_real.data[0]
-                print('loss for discriminator is %f'%lossD.data[0])  
-                
+                print 'loss for discriminator is %f'%lossD.data[0]  
+                print 'lossG_D for discriminator is %f'%lossG_D.data[0]  
+
             if opt.isWDist:
                 print 'loss_real is ',D_real.data[0],'loss_fake is ',D_fake.data[0]
                 print('loss for discriminator is %f'%Wasserstein_D.data[0], ' D cost is %f'%D_cost)                
-            
+                print 'lossG_D for discriminator is %f'%lossG_D.data[0]  
+  
             print 'cost time for iter [%d, %d] is %.2f'%(iter - 100 + 1,iter, time.time()-start)
             print '************************************************'
             running_loss = 0.0
