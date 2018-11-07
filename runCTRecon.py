@@ -301,10 +301,10 @@ def main():
         else:
             lossG_G = criterion_L2(torch.squeeze(outputG), torch.squeeze(labels))
         lossG_G = opt.lossBase * lossG_G
-        lossG_G.backward() #compute gradients
+        lossG_G.backward(retain_graph=True) #compute gradients
 
         if opt.isGDL:
-            lossG_gdl = opt.lambda_gdl * criterion_gdl(outputG,torch.unsqueeze(labels,1))
+            lossG_gdl = opt.lambda_gdl * criterion_gdl(outputG,torch.unsqueeze(np.squeeze(labels),1))
             lossG_gdl.backward() #compute gradients
 
         if opt.isAdLoss:
