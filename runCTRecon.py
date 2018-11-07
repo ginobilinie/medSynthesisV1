@@ -370,7 +370,7 @@ def main():
                 print 'lossG_D for discriminator is %f'%lossG_D.data[0]  
 
             if opt.isWDist:
-                print 'loss_real is ',D_real.data[0],'loss_fake is ',D_fake.data[0]
+                print 'loss_real is ',torch.mean(D_real).data[0],'loss_fake is ',torch.mean(D_fake).data[0]
                 print('loss for discriminator is %f'%Wasserstein_D.data[0], ' D cost is %f'%D_cost)                
                 print 'lossG_D for discriminator is %f'%lossG_D.data[0]  
   
