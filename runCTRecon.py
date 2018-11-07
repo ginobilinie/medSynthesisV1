@@ -127,9 +127,15 @@ def main():
 #     batch_size=10
     #data_generator = Generator_2D_slices(path_patients_h5,opt.batchSize,inputKey='data3T',outputKey='data7T')
     #data_generator_test = Generator_2D_slices(path_patients_h5_test,opt.batchSize,inputKey='data3T',outputKey='data7T')
+    if opt.isMultiSource:
+        data_generator = Generator_2D_slicesV1(path_patients_h5,opt.batchSize, inputKey='dataLPET', segKey='dataCT', contourKey='dataHPET')
+        data_generator_test = Generator_2D_slicesV1(path_patients_h5_val, opt.batchSize, inputKey='dataLPET', segKey='dataCT', contourKey='dataHPET')
+    else:
+        data_generator = Generator_2D_slices(path_patients_h5,opt.batchSize,inputKey='dataMR',outputKey='dataCT')
+        data_generator_test = Generator_2D_slices(path_patients_h5_test,opt.batchSize,inputKey='dataMR',outputKey='dataCT')
 
-    data_generator = Generator_2D_slicesV1(path_patients_h5,opt.batchSize, inputKey='dataLPET', segKey='dataCT', contourKey='dataHPET')
-    data_generator_test = Generator_2D_slicesV1(path_patients_h5_val, opt.batchSize, inputKey='dataLPET', segKey='dataCT', contourKey='dataHPET')
+    #data_generator = Generator_2D_slicesV1(path_patients_h5,opt.batchSize, inputKey='dataLPET', segKey='dataCT', contourKey='dataHPET')
+    #data_generator_test = Generator_2D_slicesV1(path_patients_h5_val, opt.batchSize, inputKey='dataLPET', segKey='dataCT', contourKey='dataHPET')
     if opt.resume:
         if os.path.isfile(opt.resume):
             print("=> loading checkpoint '{}'".format(opt.resume))
@@ -146,8 +152,14 @@ def main():
     start = time.time()
     for iter in range(opt.start_epoch, opt.numofIters+1):
         #print('iter %d'%iter)
-        
-        inputs, exinputs, labels = data_generator.next()
+                #print('iter %d'%iter)
+        if opt.isMultiSource:
+            inputs, exinputs, labels = data_generator.next()
+        else:
+            inputs, labels = data_generator.next()
+            exinputs = inputs
+#        inputs, exinputs, labels = data_generator.next()
+
 #         xx = np.transpose(inputs,(5,64,64))
 #         inputs = np.transpose(inputs,(0,3,1,2))
         inputs = np.squeeze(inputs) #5x64x64
@@ -383,7 +395,12 @@ def main():
                 
         if iter%opt.showValPerformanceEvery==0: #test one subject
             # to test on the validation dataset in the format of h5 
-            inputs,exinputs,labels = data_generator_test.next()
+#            inputs,exinputs,labels = data_generator_test.next()
+            if opt.isMultiSource:
+                inputs, exinputs, labels = data_generator.next()
+            else:
+                inputs, labels = data_generator.next()
+            exinputs = inputs
 
             # inputs = np.transpose(inputs,(0,3,1,2))
             inputs = np.squeeze(inputs)
