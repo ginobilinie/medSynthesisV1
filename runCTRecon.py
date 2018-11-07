@@ -384,13 +384,14 @@ def main():
             torch.save(state, opt.prefixModelName+'%d.pt'%iter)
             print 'save model: '+opt.prefixModelName+'%d.pt'%iter
 
-            if opt.isAdLoss:
+            if opt.isAdLoss or opt.isWDist:
                 torch.save(netD.state_dict(), opt.prefixModelName+'_net_D%d.pt'%iter)
         if iter%opt.decLREvery==0:
             opt.lr = opt.lr*0.5
             adjust_learning_rate(optimizer, opt.lr)
-            opt.lr_netD = opt.lr_netD*0.25
-            adjust_learning_rate(optimizerD, opt.lr_netD)
+            if opt.isAdLoss or opt.isWDist:
+                opt.lr_netD = opt.lr_netD*0.25
+                adjust_learning_rate(optimizerD, opt.lr_netD)
 
                 
         if iter%opt.showValPerformanceEvery==0: #test one subject
@@ -400,7 +401,7 @@ def main():
                 inputs, exinputs, labels = data_generator.next()
             else:
                 inputs, labels = data_generator.next()
-            exinputs = inputs
+                exinputs = inputs
 
             # inputs = np.transpose(inputs,(0,3,1,2))
             inputs = np.squeeze(inputs)
@@ -446,7 +447,7 @@ def main():
 
             if opt.isGDL:
                 lossG_gdl = criterion_gdl(outputG, labels)
-                print('loss for GDL loss is %f'%lossG_gdl.data[0])
+                print 'loss for GDL loss is %f'%lossG_gdl.data[0]
 
         if iter % opt.showTestPerformanceEvery == 0:  # test one subject
             mr_test_itk=sitk.ReadImage(os.path.join(path_test,'sub1_sourceCT.nii.gz'))
