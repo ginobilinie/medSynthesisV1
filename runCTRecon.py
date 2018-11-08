@@ -53,6 +53,8 @@ parser.add_argument("--RT_th", default=0.005, type=float, help="Relative thresho
 parser.add_argument("--pretrained", default="", type=str, help="path to pretrained model (default: none)")
 parser.add_argument("--prefixModelName", default="/home/niedong/Data4LowDosePET/pytorch_UNet/resunet2d_dp_pet_BatchAug_sNorm_lres_bn_lr5e3_lrdec_base1_lossL1_lossGDL0p05_0705_", type=str, help="prefix of the to-be-saved model name")
 parser.add_argument("--prefixPredictedFN", default="preSub1_pet_BatchAug_sNorm_resunet_dp_lres_bn_lr5e3_lrdec_base1_lossL1_lossGDL0p05_0705_", type=str, help="prefix of the to-be-saved predicted filename")
+parser.add_argument("--test_input_file_name",default='sub13_mr.hdr',type=str, help="the input file name for testing subject")
+parser.add_argument("--test_gt_file_name",default='sub13_ct.hdr',type=str, help="the ground-truth file name for testing subject") 
 
 global opt, model 
 opt = parser.parse_args()
@@ -454,9 +456,12 @@ def main():
                 print 'loss for GDL loss is %f'%lossG_gdl.data[0]
 
         if iter % opt.showTestPerformanceEvery == 0:  # test one subject
-            mr_test_itk=sitk.ReadImage(os.path.join(path_test,'sub1_sourceCT.nii.gz'))
-            ct_test_itk=sitk.ReadImage(os.path.join(path_test,'sub1_extraCT.nii.gz'))
-            hpet_test_itk = sitk.ReadImage(os.path.join(path_test, 'sub1_targetCT.nii.gz'))
+             mr_test_itk=sitk.ReadImage(os.path.join(path_test,opt.test_input_file_name))
+            ct_test_itk=sitk.ReadImage(os.path.join(path_test,opt.test_input_file_name))
+            hpet_test_itk = sitk.ReadImage(os.path.join(path_test, opt.test_gt_file_name))
+            #mr_test_itk=sitk.ReadImage(os.path.join(path_test,'sub1_sourceCT.nii.gz'))
+            #ct_test_itk=sitk.ReadImage(os.path.join(path_test,'sub1_extraCT.nii.gz'))
+            #hpet_test_itk = sitk.ReadImage(os.path.join(path_test, 'sub1_targetCT.nii.gz'))
 
             spacing = hpet_test_itk.GetSpacing()
             origin = hpet_test_itk.GetOrigin()
