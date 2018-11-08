@@ -41,6 +41,8 @@ parser.add_argument("--lr", type=float, default=5e-3, help="Learning Rate. Defau
 parser.add_argument("--lr_netD", type=float, default=5e-3, help="Learning Rate for discriminator. Default=5e-3")
 parser.add_argument("--dropout_rate", default=0.2, type=float, help="prob to drop neurons to zero: 0.2")
 parser.add_argument("--decLREvery", type=int, default=10000, help="Sets the learning rate to the initial LR decayed by momentum every n iterations, Default: n=40000")
+parser.add_argument("--lrDecRate", type=float, default=0.5, help="The weight for decreasing learning rate of netG Default=0.5")
+parser.add_argument("--lrDecRate_netD", type=float, default=0.1, help="The weight for decreasing learning rate of netD. Default=0.1")
 parser.add_argument("--cuda", action="store_true", help="Use cuda?", default=True)
 parser.add_argument("--resume", default="", type=str, help="Path to checkpoint (default: none)")
 parser.add_argument("--start_epoch", default=1, type=int, help="Manual epoch number (useful on restarts)")
@@ -389,10 +391,10 @@ def main():
             if opt.isAdLoss or opt.isWDist:
                 torch.save(netD.state_dict(), opt.prefixModelName+'_net_D%d.pt'%iter)
         if iter%opt.decLREvery==0:
-            opt.lr = opt.lr*0.5
+            opt.lr = opt.lr*opt.lrDecRate
             adjust_learning_rate(optimizer, opt.lr)
             if opt.isAdLoss or opt.isWDist:
-                opt.lr_netD = opt.lr_netD*0.25
+                opt.lr_netD = opt.lr_netD*opt.lrDecRate_netD
                 adjust_learning_rate(optimizerD, opt.lr_netD)
 
                 
