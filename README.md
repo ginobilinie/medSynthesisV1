@@ -50,3 +50,6 @@ http://brain-development.org/ixi-dataset/
 # Upload your brain MRI, Predict corresponding CT
 
 If you're interested in it, you can send me a copy of your data (for example, brain MRI), and I'll inference the CT and send a copy of predicted CT to you. My email is dongnie.at.cs.unc.edu.
+
+# License
+medSynthesis is released under the MIT License (refer to the LICENSE file for details).
