@@ -8,7 +8,8 @@ import torch.optim as optim
 import torch
 import torch.nn.init
 from torch.autograd import Variable
-
+import ast
+import argparse
 import copy
 
 #Dong add keys here
@@ -72,6 +73,72 @@ def Generator_2D_slices(path_patients,batchsize,inputKey='dataMR',outputKey='dat
             print 'y shape ', y.shape                   
             for i_batch in xrange(int(X.shape[0]/batchsize)):
                 yield (X[i_batch*batchsize:(i_batch+1)*batchsize,...],  y[i_batch*batchsize:(i_batch+1)*batchsize,...])
+
+
+# Dong add keys here
+# We extract items from one whole Epoch: traverse the data thoroughly
+def Generator_2D_slices_OneEpoch(path_patients, batchsize, inputKey='dataMR', outputKey='dataCT'):
+    # path_patients='/home/dongnie/warehouse/CT_patients/test_set/'
+    print path_patients
+    patients = os.listdir(path_patients)  # every file  is a hdf5 patient
+    # while True:
+    #
+    for idx, namepatient in enumerate(patients):
+        print namepatient
+        f = h5py.File(os.path.join(path_patients, namepatient), 'r')
+        # dataMRptr=f['dataMR']
+        dataMRptr = f[inputKey]
+        dataMR = dataMRptr.value
+
+        # dataCTptr=f['dataCT']
+        dataCTptr = f[outputKey]
+        dataCT = dataCTptr.value
+
+        dataMR = np.squeeze(dataMR)
+        dataCT = np.squeeze(dataCT)
+
+        # print 'mr shape h5 ',dataMR.shape#B,H,W,C
+        # print 'ct shape h5 ',dataCT.shape#B,H,W
+
+        shapedata = dataMR.shape
+        # Shuffle data
+        idx_rnd = np.random.choice(shapedata[0], shapedata[0], replace=False)
+        dataMR = dataMR[idx_rnd, ...]
+        dataCT = dataCT[idx_rnd, ...]
+        modulo = np.mod(shapedata[0], batchsize)
+        ################## always the number of samples will be a multiple of batchsz##########################3
+        if modulo != 0:
+            to_add = batchsize - modulo
+            inds_toadd = np.random.randint(0, dataMR.shape[0], to_add)
+            X = np.zeros((dataMR.shape[0] + to_add, dataMR.shape[1], dataMR.shape[2], dataMR.shape[3]))  # dataMR
+            X[:dataMR.shape[0], ...] = dataMR
+            X[dataMR.shape[0]:, ...] = dataMR[inds_toadd]
+
+            y = np.zeros((dataCT.shape[0] + to_add, dataCT.shape[1], dataCT.shape[2]))  # dataCT
+            y[:dataCT.shape[0], ...] = dataCT
+            y[dataCT.shape[0]:, ...] = dataCT[inds_toadd]
+
+        else:
+            X = np.copy(dataMR)
+            y = np.copy(dataCT)
+
+        # X = np.expand_dims(X, axis=3)
+        X = X.astype(np.float32)
+        y = np.expand_dims(y, axis=3)  # B,H,W,C
+        y = y.astype(np.float32)
+        # y[np.where(y==5)]=0
+
+        # shuffle the data, by dong
+        inds = np.arange(X.shape[0])
+        np.random.shuffle(inds)
+        X = X[inds, ...]
+        y = y[inds, ...]
+
+        print 'y shape ', y.shape
+        for i_batch in xrange(int(X.shape[0] / batchsize)):
+            yield (X[i_batch * batchsize:(i_batch + 1) * batchsize, ...],
+                   y[i_batch * batchsize:(i_batch + 1) * batchsize, ...])
+
 
 
 #Dong add keys here
@@ -148,7 +215,86 @@ def Generator_2D_slicesV1(path_patients,batchsize,inputKey='dataMR',segKey='data
             print 'y1 shape ', y1.shape                   
             for i_batch in xrange(int(X.shape[0]/batchsize)):
                 yield (X[i_batch*batchsize:(i_batch+1)*batchsize,...],  y[i_batch*batchsize:(i_batch+1)*batchsize,...],y1[i_batch*batchsize:(i_batch+1)*batchsize,...])
-                
+
+
+# Dong add keys here
+# We extract items from one whole Epoch: traverse the data thoroughly
+def Generator_2D_slicesV1_OneEpoch(path_patients, batchsize, inputKey='dataMR', segKey='dataCT', contourKey='dataContour'):
+    # path_patients='/home/dongnie/warehouse/CT_patients/test_set/'
+    print path_patients
+    patients = os.listdir(path_patients)  # every file  is a hdf5 patient
+    # # while True:
+    #
+    for idx, namepatient in enumerate(patients):
+        print namepatient
+        f = h5py.File(os.path.join(path_patients, namepatient), 'r')
+        # dataMRptr=f['dataMR']
+        dataMRptr = f[inputKey]
+        dataMR = dataMRptr.value
+
+        # dataCTptr=f['dataCT']
+        dataCTptr = f[segKey]
+        dataCT = dataCTptr.value
+
+        dataContourptr = f[contourKey]
+        dataContour = dataContourptr.value
+
+        dataMR = np.squeeze(dataMR)
+        dataCT = np.squeeze(dataCT)
+        dataContour = np.squeeze(dataContour)
+
+        # print 'mr shape h5 ',dataMR.shape#B,H,W,C
+        print 'ct shape h5 ', dataCT.shape  # B,H,W
+
+        shapedata = dataMR.shape
+        # Shuffle data
+        idx_rnd = np.random.choice(shapedata[0], shapedata[0], replace=False)
+        dataMR = dataMR[idx_rnd, ...]
+        dataCT = dataCT[idx_rnd, ...]
+        dataContour = dataContour[idx_rnd, ...]
+        modulo = np.mod(shapedata[0], batchsize)
+        ################## always the number of samples will be a multiple of batchsz##########################3
+        if modulo != 0:
+            to_add = batchsize - modulo
+            inds_toadd = np.random.randint(0, dataMR.shape[0], to_add)
+            X = np.zeros((dataMR.shape[0] + to_add, dataMR.shape[1], dataMR.shape[2], dataMR.shape[3]))  # dataMR
+            X[:dataMR.shape[0], ...] = dataMR
+            X[dataMR.shape[0]:, ...] = dataMR[inds_toadd]
+
+            y = np.zeros((dataCT.shape[0] + to_add, dataCT.shape[1], dataCT.shape[2], dataCT.shape[3]))  # dataCT
+            y[:dataCT.shape[0], ...] = dataCT
+            y[dataCT.shape[0]:, ...] = dataCT[inds_toadd]
+
+            y1 = np.zeros((dataContour.shape[0] + to_add, dataContour.shape[1], dataContour.shape[2]))  # dataCT
+            y1[:dataContour.shape[0], ...] = dataContour
+            y1[dataContour.shape[0]:, ...] = dataContour[inds_toadd]
+
+        else:
+            X = np.copy(dataMR)
+            y = np.copy(dataCT)
+            y1 = np.copy(dataContour)
+
+        # X = np.expand_dims(X, axis=3)
+        X = X.astype(np.float32)
+        #             y=np.expand_dims(y, axis=3)#B,H,W,C
+        #             y=y.astype(np.float32)
+        # y[np.where(y==5)]=0
+
+        # shuffle the data, by dong
+        inds = np.arange(X.shape[0])
+        np.random.shuffle(inds)
+        X = X[inds, ...]
+        y = y[inds, ...]
+        y1 = y1[inds, ...]
+
+        print 'y shape ', y.shape
+        print 'X shape ', X.shape
+        print 'y1 shape ', y1.shape
+        for i_batch in xrange(int(X.shape[0] / batchsize)):
+            yield (X[i_batch * batchsize:(i_batch + 1) * batchsize, ...],
+                   y[i_batch * batchsize:(i_batch + 1) * batchsize, ...],
+                   y1[i_batch * batchsize:(i_batch + 1) * batchsize, ...])
+
 
 #Dong add a variable of keys here
 '''
@@ -396,6 +542,40 @@ def evaluate(patch_MR, netG, modelPath):
         #print 'mean of ctpatch estimated ',np.mean(patch_CT_pred)
         return patchOut
 
+'''
+    Evaluate one patch using the latest pytorch model
+input:
+    patch_MR: a np array of shape [H,W,nchans]
+output:    
+    patch_CT_pred: segmentation maps for the corresponding input patch 
+'''
+def evaluate_reg(patch_MR, netG, modelPath):
+    patch_MR = torch.from_numpy(patch_MR)
+
+    patch_MR = patch_MR.unsqueeze(0)
+    #         patch_MR=np.expand_dims(patch_MR,axis=0)#[1,H,W,nchans]
+    patch_MR = Variable(patch_MR).float().cuda()
+    #         netG = ResSegNet() #here is your network
+    #         netG.load_state_dict(torch.load(modelPath))
+    netG.cuda()
+    netG.eval()
+    #         print type(patch_MR)
+    res = netG(patch_MR)
+
+    #         print res.size(),res.squeeze(0).size()
+    if isinstance(res, tuple):
+        res = res[0]
+    # _, tmp = res.squeeze(0).max(0)
+    tmp = res
+    patchOut = tmp.data.cpu().numpy().squeeze()
+
+    # imsave('mr32.png',np.squeeze(MR16_eval[0,:,:,2]))
+    # imsave('ctpred.png',np.squeeze(patch_CT_pred[0,:,:,0]))
+    # print 'mean of layer  ',np.mean(MR16_eval)
+    # print 'min ct estimated ',np.min(patch_CT_pred)
+    # print 'max ct estimated ',np.max(patch_CT_pred)
+    # print 'mean of ctpatch estimated ',np.mean(patch_CT_pred)
+    return patchOut
 
 '''
     Evaluate one patch with long-term skip connection using the latest pytorch model
@@ -620,9 +800,9 @@ input:
     netG: network for the generator
     modelPath: the pytorch model path (pth)
 output:
-    matOut: the predicted segmentation map
+    matOut: the predicted segmentation/regression map
 '''
-def testOneSubject(MR_image,CT_GT,MR_patch_sz,CT_patch_sz,step, netG, modelPath):
+def testOneSubject_aver(MR_image,CT_GT,MR_patch_sz,CT_patch_sz,step, netG, modelPath, type='reg'):
 
     matFA = MR_image
     matSeg = CT_GT
@@ -666,7 +846,11 @@ def testOneSubject(MR_image,CT_GT,MR_patch_sz,CT_patch_sz,step, netG, modelPath)
                 #mynet.blobs['dataMR'].data[0,0,...]=volFA
                 #mynet.forward()
                 #temppremat = mynet.blobs['softmax'].data[0].argmax(axis=0) #Note you have add softmax layer in deploy prototxt
-                temppremat = evaluate(volFA, netG, modelPath)
+                if type == 'reg':
+                    temppremat = evaluate_reg(volFA, netG, modelPath)
+                else:
+                    temppremat = evaluate(volFA, netG, modelPath)
+                # temppremat = evaluate(volFA, netG, modelPath)
 #                 print 'temppremat shape 1: ',temppremat.shape
                 if len(temppremat.shape)==2:
                     temppremat = np.expand_dims(temppremat,axis=0)
@@ -676,6 +860,113 @@ def testOneSubject(MR_image,CT_GT,MR_patch_sz,CT_patch_sz,step, netG, modelPath)
                 matOut[i:i+dSeg[0],j:j+dSeg[1],k:k+dSeg[2]] = matOut[i:i+dSeg[0],j:j+dSeg[1],k:k+dSeg[2]]+temppremat;
                 used[i:i+dSeg[0],j:j+dSeg[1],k:k+dSeg[2]] = used[i:i+dSeg[0],j:j+dSeg[1],k:k+dSeg[2]]+1;
     matOut = matOut/used
+    return matOut
+
+
+'''
+    Receives mulit-modal MR image and returns an segmentation label maps with the same size
+    We use averaging at the overlapping regions
+input:
+    FA_image: a first modality, the raw input data (after preprocessing)
+    MR_image: a second modality, the raw input data (after preprocessing)
+    CT_GT: the ground truth data
+    MR_patch_sz: 3x168x112?
+    CT_patch_sz: 1x168x112?
+    step: 1 (along the 1st dimension)
+    netG: network for the generator
+    modelPath: the pytorch model path (pth)
+output:
+    matOut: the predicted segmentation/regression map
+'''
+def testOneSubject_aver_MultiModal(FA_image, MR_image, CT_GT, MR_patch_sz, CT_patch_sz, step, netG, modelPath, type='reg'):
+    matFA = FA_image
+    matMR = MR_image
+    matSeg = CT_GT
+    dFA = MR_patch_sz
+    dSeg = CT_patch_sz
+
+    eps = 1e-5
+    [row, col, leng] = matFA.shape
+    margin1 = int((dFA[0] - dSeg[0]) / 2)
+    margin2 = int((dFA[1] - dSeg[1]) / 2)
+    margin3 = int((dFA[2] - dSeg[2]) / 2)
+    cubicCnt = 0
+    marginD = [margin1, margin2, margin3]
+    print 'matFA shape is ', matFA.shape
+    matFAOut = np.zeros([row + 2 * marginD[0], col + 2 * marginD[1], leng + 2 * marginD[2]])
+    print 'matFAOut shape is ', matFAOut.shape
+    matFAOut[marginD[0]:row + marginD[0], marginD[1]:col + marginD[1], marginD[2]:leng + marginD[2]] = matFA
+
+    print 'matMR shape is ', matMR.shape
+    matMROut = np.zeros([row + 2 * marginD[0], col + 2 * marginD[1], leng + 2 * marginD[2]])
+    print 'matMROut shape is ', matMROut.shape
+    matMROut[marginD[0]:row + marginD[0], marginD[1]:col + marginD[1], marginD[2]:leng + marginD[2]] = matMR
+
+    ## matFA
+    # we'd better flip it along the first dimension
+    matFAOut[0:marginD[0], marginD[1]:col + marginD[1], marginD[2]:leng + marginD[2]] = matFA[0:marginD[0], :,:]
+    # we'd better flip it along the 1st dimension
+    matFAOut[row + marginD[0]:matFAOut.shape[0], marginD[1]:col + marginD[1], marginD[2]:leng + marginD[2]] = matFA[row - marginD[0]:matFA.shape[0], :,:]
+
+    # we'd better flip it along the 2nd dimension
+    matFAOut[marginD[0]:row + marginD[0], 0:marginD[1], marginD[2]:leng + marginD[2]] = matFA[:, 0:marginD[1],:]
+    # we'd better to flip it along the 2nd dimension
+    matFAOut[marginD[0]:row + marginD[0], col + marginD[1]:matFAOut.shape[1], marginD[2]:leng + marginD[2]] = matFA[:,col - marginD[1]: matFA.shape[1], :]
+
+    # we'd better flip it along the 3rd dimension
+    matFAOut[marginD[0]:row + marginD[0], marginD[1]:col + marginD[1], 0:marginD[2]] = matFA[:, :, 0:marginD[2]]
+    matFAOut[marginD[0]:row + marginD[0], marginD[1]:col + marginD[1], marginD[2] + leng:matFAOut.shape[2]] = matFA[:,:, leng - marginD[2]:matFA.shape[2]]
+
+
+    ## matMR
+    # we'd better flip it along the first dimension
+    matMROut[0:marginD[0], marginD[1]:col + marginD[1], marginD[2]:leng + marginD[2]] = matMR[0:marginD[0], :, :]
+    # we'd better flip it along the 1st dimension
+    matMROut[row + marginD[0]:matMROut.shape[0], marginD[1]:col + marginD[1], marginD[2]:leng + marginD[2]] = matMR[row -marginD[0]:matMR.shape[ 0], :,:]
+
+    # we'd better flip it along the 2nd dimension
+    matMROut[marginD[0]:row + marginD[0], 0:marginD[1], marginD[2]:leng + marginD[2]] = matMR[:, 0:marginD[1], :]
+    # we'd better to flip it along the 2nd dimension
+    matMROut[marginD[0]:row + marginD[0], col + marginD[1]:matMROut.shape[1], marginD[2]:leng + marginD[2]] = matMR[:,col-marginD[1]:matMR.shape[1], :]
+
+    # we'd better flip it along the 3rd dimension
+    matMROut[marginD[0]:row + marginD[0], marginD[1]:col + marginD[1], 0:marginD[2]] = matMR[:, :, 0:marginD[2]]
+    matMROut[marginD[0]:row + marginD[0], marginD[1]:col + marginD[1], marginD[2] + leng:matMROut.shape[2]] = matMR[:,:, leng - marginD[2]:matMR.shape[2]]
+
+    matOut = np.zeros((matSeg.shape[0], matSeg.shape[1], matSeg.shape[2]))
+    used = np.zeros((matSeg.shape[0], matSeg.shape[1], matSeg.shape[2])) + eps
+    # fid=open('trainxxx_list.txt','a');
+    print 'last i ', row - dSeg[0]
+    for i in range(0, row - dSeg[0] + 1, step[0]):
+        #         print 'i ',i
+        for j in range(0, col - dSeg[1] + 1, step[1]):
+            for k in range(0, leng - dSeg[2] + 1, step[2]):
+                volSeg = matSeg[i:i + dSeg[0], j:j + dSeg[1], k:k + dSeg[2]]
+                # print 'volSeg shape is ',volSeg.shape
+                volFA = matFAOut[i:i + dSeg[0] + 2 * marginD[0], j:j + dSeg[1] + 2 * marginD[1],
+                        k:k + dSeg[2] + 2 * marginD[2]]
+                volMR = matMROut[i:i+dSeg[0]+2*marginD[0],j:j+dSeg[1]+2*marginD[1],k:k+dSeg[2]+2*marginD[2]]
+                volMat = np.concatenate((volFA, volMR), 0)
+                # print 'volFA shape is ',volFA.shape
+                # mynet.blobs['dataMR'].data[0,0,...]=volFA
+                # mynet.forward()
+                # temppremat = mynet.blobs['softmax'].data[0].argmax(axis=0) #Note you have add softmax layer in deploy prototxt
+                if type=='reg':
+                    temppremat = evaluate_reg(volMat, netG, modelPath)
+                else:
+                    temppremat = evaluate(volMat, netG, modelPath)
+                # temppremat = evaluate(volMat, netG, modelPath)
+                #                 print 'temppremat shape 1: ',temppremat.shape
+                if len(temppremat.shape) == 2:
+                    temppremat = np.expand_dims(temppremat, axis=0)
+                # print 'patchout shape ',temppremat.shape
+                # temppremat=volSeg
+                #                 print 'temppremat shape 2: ',temppremat.shape
+                matOut[i:i + dSeg[0], j:j + dSeg[1], k:k + dSeg[2]] = matOut[i:i + dSeg[0], j:j + dSeg[1],
+                                                                      k:k + dSeg[2]] + temppremat;
+                used[i:i + dSeg[0], j:j + dSeg[1], k:k + dSeg[2]] = used[i:i + dSeg[0], j:j + dSeg[1],
+                                                                    k:k + dSeg[2]] + 1;
+    matOut = matOut / used
     return matOut
 
 
@@ -776,3 +1067,12 @@ def testOneSubject(MR_image, CT_GT, NumOfClass, MR_patch_sz, CT_patch_sz, step, 
     #matOut1=np.transpose(matOut1,(2,1,0))
     #matSeg=np.transpose(matSeg,(2,1,0))
     return matOut,matSeg
+
+'''
+    used as list in argparse
+'''
+def arg_as_list(s):
+    v = ast.literal_eval(s)
+    if type(v) is not list:
+        raise argparse.ArgumentTypeError("Argument \"%s\" is not a list" % (s))
+    return v
