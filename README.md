@@ -21,7 +21,7 @@ Steps to run the code:
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; You have to place the paths to the training h5 files (path_patients_h5), the validation h5 files (path_patients_h5_test) and also the path to the testing images (path_test ) in the this python file<br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Also, you have to setup all other config choices, such as network choice, disciminator choise, loss functions (including some additional loss, i.e., gradient difference loss), initial learing rate, decrease learning rate during training even with adam optimal solver and so on
 6. run the code: python runCTRecon.py (or 3d with runCTRecon3d.py) for training stage
-7. run the code: python runTesting_Recon.py for testing stage
+7. run the code: python runTesting_Reconv2.py for testing stage
 
 If it is helpful to your work, please cite the papers:
 
