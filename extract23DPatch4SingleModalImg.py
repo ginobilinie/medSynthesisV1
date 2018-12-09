@@ -18,11 +18,14 @@ parser.add_argument("--how2normalize", type=int, default=6, help="how to normali
 global opt
 opt = parser.parse_args()
 
+# input patch size
 d1 = 5
 d2 = 64
 d3 = 64
+# output patch size
 dFA = [d1, d2, d3]  # size of patches of input data
 dSeg = [1, 64, 64]  # size of pathes of label data
+# stride for extracting patches along the volume
 step1 = 1
 step2 = 16 
 step3 = 16
