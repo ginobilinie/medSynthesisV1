@@ -201,8 +201,8 @@ def extractPatch4OneSubject(matFA, matSeg, matMask, fileID, d, step, rate):
 def main():
     print opt
     path = '/home/niedong/Data4LowDosePET/data_niigz_scale/'
-    path = '/shenlab/lab_stor5/dongnie/brain_mr2ct/original_data/'
-    scan = ScanFile(path, postfix='_mr.hdr')
+    path = '/shenlab/lab_stor5/dongnie/brain_mr2ct/original_data/' # path to the data, change to your own path
+    scan = ScanFile(path, postfix='_mr.hdr') # the specify item for your files, change to your own style
     filenames = scan.scan_files()
 
     # for input
