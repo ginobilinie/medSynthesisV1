@@ -344,8 +344,8 @@ def main():
         # print 'spet: maxV,',np.ndarray.max(matSPET),' minV, ',np.ndarray.min(matSPET), ' meanV: ',np.mean(matSPET), ' stdV: ', np.std(matSPET)
 
         sdir = filename.split('/')
-        print 'sdir is, ', sdir, 'and s6 is, ', sdir[6]
-        lpet_fn = sdir[6]
+        print 'sdir is, ', sdir, 'and s6 is, ', sdir[len(sdir)-1]
+        lpet_fn = sdir[len(sdir)-1]
         words = lpet_fn.split('_')
         print 'words are, ', words
         # ind = int(words[0])
