@@ -8,9 +8,12 @@ import torch.optim as optim
 import torch
 import torch.nn.init
 from torch.autograd import Variable
+from scipy import signal
+from scipy import ndimage
 import ast
 import argparse
 import copy
+import gauss
 
 #Dong add keys here
 def Generator_2D_slices(path_patients,batchsize,inputKey='dataMR',outputKey='dataCT'):
