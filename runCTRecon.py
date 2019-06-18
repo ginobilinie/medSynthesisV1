@@ -136,7 +136,7 @@ def main():
         data_generator_test = Generator_2D_slicesV1(path_patients_h5_val, opt.batchSize, inputKey='dataLPET', segKey='dataCT', contourKey='dataHPET')
     else:
         data_generator = Generator_2D_slices(path_patients_h5,opt.batchSize,inputKey='dataMR',outputKey='dataCT')
-        data_generator_test = Generator_2D_slices(path_patients_h5_test,opt.batchSize,inputKey='dataMR',outputKey='dataCT')
+        data_generator_test = Generator_2D_slices(path_patients_h5_val,opt.batchSize,inputKey='dataMR',outputKey='dataCT')
 
     #data_generator = Generator_2D_slicesV1(path_patients_h5,opt.batchSize, inputKey='dataLPET', segKey='dataCT', contourKey='dataHPET')
     #data_generator_test = Generator_2D_slicesV1(path_patients_h5_val, opt.batchSize, inputKey='dataLPET', segKey='dataCT', contourKey='dataHPET')
