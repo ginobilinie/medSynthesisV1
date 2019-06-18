@@ -6,7 +6,7 @@ https://github.com/ginobilinie/medSynthesis
 The main entrance for the code is runCTRecon.py or runCTRecon3d.py (currently, the 2d/2.5d version is fine to run, and the discriminator for 3d version currently only support BCE loss since I suggest you use W-distance (WGAN-GP) since it is easier to tune the hyper-parameters for this one).
 
 I suppose you have installed:    <br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;python (2.x, e.g., 2.7.x; for python 3.x, change some codes: .next() to .\__next\__())
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;python 2.x (e.g., 2.7.x; for python 3.x, change some codes: .next() to .\__next\__())
     <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pytorch (>=0.3.0)
      <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;simpleITK 
      <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numpy
