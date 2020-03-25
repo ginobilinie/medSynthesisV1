@@ -52,7 +52,7 @@ class residualUnit(nn.Module):
 
     def forward(self, x):
         out1 = self.activation(self.bn1(self.conv1(x)))
-        out2 = self.activation(self.bn1(self.conv2(out1)))
+        out2 = self.activation(self.bn2(self.conv2(out1)))
         if self.in_size!=self.out_size:
             bridge = self.activation(self.bnX(self.convX(x)))
         output = torch.add(out2, bridge)
