@@ -62,5 +62,7 @@ http://www.isles-challenge.org/ISLES2015/
 
 If you're interested in it, you can send me a copy of your data (for example, brain MRI), and I'll inference the CT and send a copy of predicted CT to you. My email is dongnie.at.cs.unc.edu.
 
+# A parallel training together with an adversarial confidence learning version will uploaded soon.
+
 # License
 medSynthesis is released under the MIT License (refer to the LICENSE file for details).
