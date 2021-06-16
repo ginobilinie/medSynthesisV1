@@ -35,7 +35,6 @@ If it is helpful to your work, please cite the papers:
   year={2017},
   organization={Springer}
 }
-
 @article{nie2018medical,
   title={Medical Image Synthesis with Deep Convolutional Adversarial Networks},
   author={Nie, Dong and Trullo, Roger and Lian, Jun and Wang, Li and Petitjean, Caroline and Ruan, Su and Wang, Qian and Shen, Dinggang},
@@ -44,6 +43,7 @@ If it is helpful to your work, please cite the papers:
   publisher={IEEE}
 }
 </pre>
+
 # Dataset
 BTW, you can download a real medical image synthesis dataset for reconstructing standard-dose PET from low-dose PET via this link:  https://www.aapm.org/GrandChallenge/LowDoseCT/
 
